@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.db import transaction
 from rest_framework import serializers
 
 from .models import Invite, User
@@ -29,6 +30,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Código de convite expirado ou já usado.")
         return value
 
+    @transaction.atomic
     def create(self, validated_data):
         invite = Invite.objects.select_for_update().get(code=validated_data.pop("invite_code"))
         password = validated_data.pop("password")

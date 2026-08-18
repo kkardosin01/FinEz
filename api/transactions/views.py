@@ -25,6 +25,7 @@ def _month_bounds(month_str: str | None):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all().order_by("id")
     serializer_class = CategorySerializer
+    pagination_class = None
 
 
 class TransactionListCreateView(generics.ListCreateAPIView):

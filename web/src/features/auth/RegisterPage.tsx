@@ -28,7 +28,8 @@ export function RegisterPage() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: FormData) => {
-    registerUser.mutate(data, {
+    const payload = { ...data, birth_date: data.birth_date || undefined };
+    registerUser.mutate(payload, {
       onSuccess: () => navigate("/"),
       onError: (err) => {
         const message =

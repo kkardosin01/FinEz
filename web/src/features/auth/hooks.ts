@@ -7,8 +7,10 @@ export function useMe() {
     queryKey: ["me"],
     queryFn: authApi.me,
     retry: false,
-    // 401 é esperado quando deslogado — não é um erro de rede
-    throwOnError: (error) => !(error instanceof ApiError && error.status === 401),
+    // 401/403 são esperados quando deslogado (DRF SessionAuthentication retorna
+    // 403, não 401, pois não emite desafio WWW-Authenticate) — não é erro de rede
+    throwOnError: (error) =>
+      !(error instanceof ApiError && (error.status === 401 || error.status === 403)),
   });
 }
 
