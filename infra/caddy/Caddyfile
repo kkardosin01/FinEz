@@ -1,0 +1,21 @@
+{$DOMAIN:localhost} {
+	encode gzip
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+	handle /admin/* {
+		reverse_proxy api:8000
+	}
+	handle /webhooks/* {
+		reverse_proxy api:8000
+	}
+	handle /static/* {
+		reverse_proxy api:8000
+	}
+
+	# SPA — servida pelo container web (nginx com o build do Vite)
+	handle {
+		reverse_proxy web:80
+	}
+}

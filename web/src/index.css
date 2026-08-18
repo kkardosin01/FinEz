@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens (seção 2) — RGB sem "rgb()" pra funcionar com <alpha-value> do Tailwind */
+:root {
+  --color-bg: 246 247 244;
+  --color-card: 255 255 255;
+  --color-fg: 21 34 24;
+  --color-fg-secondary: 117 128 122;
+  --color-border: 227 231 225;
+  --color-income: 14 122 78;
+  --color-expense: 194 69 45;
+  --color-warning: 176 123 30;
+}
+
+.dark {
+  --color-bg: 16 21 18;
+  --color-card: 26 33 28;
+  --color-fg: 232 236 233;
+  --color-fg-secondary: 138 148 141;
+  --color-border: 42 51 45;
+  --color-income: 61 201 138;
+  --color-expense: 240 122 98;
+  --color-warning: 224 168 62;
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+body {
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-fg));
+  font-family: "Space Grotesk", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-finez}
+      POSTGRES_USER: ${POSTGRES_USER:-finez}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finez}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finez}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      # Exposto pra permitir `npm run dev` do front fora do Compose. Em
+      # produção, feche a porta no firewall/Cloudflare (só Caddy 80/443 públicas).
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - static_data:/app/staticfiles
+
+  worker:
+    build: ./api
+    restart: unless-stopped
+    entrypoint: ["./entrypoint-worker.sh"]
+    command: ["celery", "-A", "config", "worker", "--loglevel=info"]
+    env_file: .env
+    depends_on:
+      - api
+
+  beat:
+    build: ./api
+    restart: unless-stopped
+    entrypoint: ["./entrypoint-worker.sh"]
+    command: ["celery", "-A", "config", "beat", "--loglevel=info"]
+    env_file: .env
+    depends_on:
+      - api
+
+  whatsapp:
+    build: ./whatsapp-adapter
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_WEBHOOK_URL: http://api:8000/webhooks/whatsapp
+    volumes:
+      - whatsapp_session:/data
+    depends_on:
+      - api
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+      - web
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_data:
+  whatsapp_session:
+  caddy_data:
+  caddy_config:

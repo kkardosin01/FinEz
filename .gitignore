@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Django
+api/staticfiles/
+api/media/
+
+# Node
+node_modules/
+dist/
+web/dist/
+web/tsconfig.tsbuildinfo
+whatsapp-adapter/node_modules/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# WhatsApp session (criptografada, mas não versionada)
+whatsapp-adapter/data/
+whatsapp_session/
+
+# Editor/OS
+.DS_Store
+.vscode/
+.idea/
