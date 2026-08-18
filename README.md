@@ -4,6 +4,16 @@
 **WhatsApp como interface diária** (lançar/consultar gastos por mensagem) e
 **Open Finance opcional** (Pluggy) pra importar extratos automaticamente.
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Django](https://img.shields.io/badge/Django-092E20?style=flat&logo=django&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+
 ## Stack
 
 | Camada | Tecnologia |
@@ -13,6 +23,17 @@
 | Bot | Node 20 + Baileys (WhatsApp Web protocol), sessão persistida com AES-256-GCM |
 | Agregador Open Finance | Pluggy (sandbox gratuito em desenvolvimento) |
 | Infra | Docker Compose, Caddy (TLS automático), GitHub Actions (CI/CD) |
+
+## Linguagens
+
+| Linguagem | Onde |
+|---|---|
+| Python | API (`api/`) — Django, Celery |
+| TypeScript | Front (`web/`) — React |
+| JavaScript | Adaptador WhatsApp (`whatsapp-adapter/`) — Node/Baileys |
+| SQL | Modelos/migrations do Django (ORM) |
+| Shell | Scripts de entrypoint e backup (`api/entrypoint*.sh`, `infra/backup.sh`) |
+| YAML | CI/CD (`.github/workflows/`), Docker Compose |
 
 ## Estrutura
 
