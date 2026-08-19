@@ -1,5 +1,4 @@
 """Espera o Postgres aceitar conexões antes de seguir com migrate/gunicorn."""
-import os
 import sys
 import time
 

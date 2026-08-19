@@ -19,7 +19,7 @@ PAIRING_INSTRUCTIONS = (
 def process_whatsapp_webhook(self, event_id: str):
     """Webhook só enfileira; este worker processa (princípio da seção 4)."""
     from .handlers import handle_incoming_message
-    from .models import WhatsappLink, WhatsappMessage
+    from .models import WhatsappMessage
     from .sender import send_whatsapp_message
 
     event = WebhookEvent.objects.get(id=event_id)

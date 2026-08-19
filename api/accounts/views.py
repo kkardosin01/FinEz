@@ -4,12 +4,11 @@ from django.contrib.auth import login, logout
 from django.utils.decorators import method_decorator
 from django_ratelimit.decorators import ratelimit
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .lgpd import delete_user_data
-from .models import User
 from .serializers import LoginSerializer, MeSerializer, RegisterSerializer
 
 logger = logging.getLogger("finez")

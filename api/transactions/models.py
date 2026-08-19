@@ -1,9 +1,6 @@
-import uuid
-
-from django.conf import settings
 from django.db import models
 
-from common.models import TimestampedModel, UserOwnedModel
+from common.models import UserOwnedModel
 
 
 class Category(models.Model):
