@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "budgets",
     "whatsapp",
     "exports",
+    "investments",
 ]
 
 MIDDLEWARE = [

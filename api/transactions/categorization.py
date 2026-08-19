@@ -19,6 +19,9 @@ PROVIDER_CATEGORY_MAP = {
     "Housing": Category.Slug.HOUSING,
     "Salary": Category.Slug.INCOME,
     "Income": Category.Slug.INCOME,
+    "Credit Card Payment": Category.Slug.CREDIT_CARD,
+    "Loans and Financing": Category.Slug.LOAN,
+    "Debt": Category.Slug.DEBT,
 }
 
 

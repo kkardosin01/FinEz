@@ -15,9 +15,9 @@ export default {
         warning: "rgb(var(--color-warning) / <alpha-value>)",
       },
       fontFamily: {
-        heading: ["Bricolage Grotesque", "sans-serif"],
-        sans: ["Space Grotesk", "sans-serif"],
-        mono: ["IBM Plex Mono", "monospace"],
+        heading: ["Fredoka", "sans-serif"],
+        sans: ["Nunito", "sans-serif"],
+        mono: ["Nunito", "sans-serif"],
       },
       borderRadius: {
         card: "16px",

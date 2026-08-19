@@ -74,3 +74,16 @@ export interface Summary {
   by_category: SummaryCategoryRow[];
   daily: { date: string; total_cents: number }[];
 }
+
+export interface InvestmentMover {
+  symbol: string;
+  name: string;
+  price: number | null;
+  change_pct: number;
+  kind: "crypto" | "stock" | "fii";
+}
+
+export interface InvestmentsTopMovers {
+  crypto: InvestmentMover[];
+  stocks_and_fiis: InvestmentMover[];
+}

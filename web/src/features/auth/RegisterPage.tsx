@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { ConnectBankDialog } from "@/features/connections/ConnectBankDialog";
 import { ApiError } from "@/lib/api";
 import { useRegister } from "./hooks";
 
@@ -20,6 +21,7 @@ type FormData = z.infer<typeof schema>;
 export function RegisterPage() {
   const navigate = useNavigate();
   const registerUser = useRegister();
+  const [showConnectPrompt, setShowConnectPrompt] = useState(false);
   const {
     register,
     handleSubmit,
@@ -30,7 +32,7 @@ export function RegisterPage() {
   const onSubmit = (data: FormData) => {
     const payload = { ...data, birth_date: data.birth_date || undefined };
     registerUser.mutate(payload, {
-      onSuccess: () => navigate("/"),
+      onSuccess: () => setShowConnectPrompt(true),
       onError: (err) => {
         const message =
           err instanceof ApiError
@@ -84,6 +86,7 @@ export function RegisterPage() {
           </Link>
         </p>
       </Card>
+      <ConnectBankDialog open={showConnectPrompt} onDone={() => navigate("/")} />
     </div>
   );
 }

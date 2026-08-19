@@ -32,6 +32,9 @@ _KEYWORD_CATEGORY = {
     Category.Slug.HEALTH: ["farmácia", "farmacia", "remédio", "remedio", "médico", "medico", "consulta"],
     Category.Slug.LEISURE: ["cinema", "bar", "show", "festa", "jogo", "lazer"],
     Category.Slug.HOUSING: ["aluguel", "condomínio", "condominio", "luz", "água", "agua", "internet"],
+    Category.Slug.CREDIT_CARD: ["fatura", "cartão de crédito", "cartao de credito"],
+    Category.Slug.LOAN: ["empréstimo", "emprestimo", "financiamento"],
+    Category.Slug.DEBT: ["dívida", "divida"],
 }
 
 # Aliases usados na correção via chat ("era transporte") -> slug da categoria.
@@ -47,7 +50,16 @@ _CATEGORY_ALIASES = {
     "saude": Category.Slug.HEALTH,
     "lazer": Category.Slug.LEISURE,
     "moradia": Category.Slug.HOUSING,
+    "salário": Category.Slug.INCOME,
+    "salario": Category.Slug.INCOME,
     "receita": Category.Slug.INCOME,
+    "renda extra": Category.Slug.EXTRA_INCOME,
+    "cartão de crédito": Category.Slug.CREDIT_CARD,
+    "cartao de credito": Category.Slug.CREDIT_CARD,
+    "empréstimo": Category.Slug.LOAN,
+    "emprestimo": Category.Slug.LOAN,
+    "dívida": Category.Slug.DEBT,
+    "divida": Category.Slug.DEBT,
     "outros": Category.Slug.OTHER,
 }
 

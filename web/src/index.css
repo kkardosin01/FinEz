@@ -32,12 +32,12 @@
 body {
   background-color: rgb(var(--color-bg));
   color: rgb(var(--color-fg));
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Nunito", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
-  font-family: "Bricolage Grotesque", sans-serif;
+  font-family: "Fredoka", sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {

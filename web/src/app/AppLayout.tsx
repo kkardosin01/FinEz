@@ -1,9 +1,9 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { ThemePicker } from "@/components/ui/ThemePicker";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { to: "/", label: "Visão geral", icon: "📊" },
-  { to: "/transacoes", label: "Transações", icon: "📄" },
   { to: "/orcamentos", label: "Orçamentos", icon: "🎯" },
   { to: "/conta", label: "Conta", icon: "⚙️" },
 ];
@@ -32,9 +32,12 @@ export function AppLayout() {
             </li>
           ))}
         </ul>
+        <div className="mt-auto border-t border-border pt-2">
+          <ThemePicker />
+        </div>
       </nav>
 
-      <main className="mx-auto max-w-2xl px-4 py-6">
+      <main className="mx-auto max-w-3xl px-4 py-6">
         <Outlet />
       </main>
 
@@ -57,6 +60,7 @@ export function AppLayout() {
             {item.label}
           </NavLink>
         ))}
+        <ThemePicker className="flex-1 flex-col items-center gap-0.5 rounded-none py-2 text-xs min-h-[44px]" />
       </nav>
     </div>
   );

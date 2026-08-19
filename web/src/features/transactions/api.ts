@@ -24,6 +24,11 @@ export interface PaginatedTransactions {
   results: Transaction[];
 }
 
+export interface ImportResult {
+  imported: number;
+  errors: string[];
+}
+
 export const transactionsApi = {
   list: (filters: TransactionFilters) =>
     api.get<PaginatedTransactions>(`/transactions?${toQueryString(filters)}`),
@@ -32,4 +37,9 @@ export const transactionsApi = {
   createManual: (payload: { amount_cents: number; description: string; date: string; category: number }) =>
     api.post<Transaction>("/transactions", payload),
   categories: () => api.get<Category[]>("/categories"),
+  importFile: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.postForm<ImportResult>("/imports/transactions", formData);
+  },
 };

@@ -4,35 +4,19 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Dialog } from "@/components/ui/Dialog";
 import { api, API_URL } from "@/lib/api";
-import { useThemeStore } from "@/app/theme-store";
 import { useMe, useLogout } from "@/features/auth/hooks";
 import { ConnectionsSection } from "@/features/connections/ConnectionsPage";
-import type { Theme } from "@/types";
-import { useGeneratePairingCode, usePairingStatus, useUpdateTheme } from "./hooks";
-
-const THEME_OPTIONS: { value: Theme; label: string }[] = [
-  { value: "light", label: "Claro" },
-  { value: "dark", label: "Escuro" },
-  { value: "system", label: "Sistema" },
-];
+import { useGeneratePairingCode, usePairingStatus } from "./hooks";
 
 export function AccountPage() {
   const navigate = useNavigate();
   const { data: me } = useMe();
   const logout = useLogout();
-  const theme = useThemeStore((s) => s.theme);
-  const setTheme = useThemeStore((s) => s.setTheme);
-  const updateTheme = useUpdateTheme();
   const { data: pairing } = usePairingStatus();
   const generatePairingCode = useGeneratePairingCode();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
-
-  const handleThemeChange = (value: Theme) => {
-    setTheme(value);
-    updateTheme.mutate(value);
-  };
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -52,24 +36,6 @@ export function AccountPage() {
         <p className="text-sm text-fg-secondary">Logado como</p>
         <p className="font-medium">{me?.name ?? me?.email}</p>
         <p className="text-sm text-fg-secondary">{me?.email}</p>
-      </Card>
-
-      <Card className="space-y-3">
-        <h2 className="font-heading font-semibold">Aparência</h2>
-        <div className="flex gap-2">
-          {THEME_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => handleThemeChange(opt.value)}
-              className={`flex-1 rounded-lg border px-3 py-2 text-sm min-h-[44px] ${
-                theme === opt.value ? "border-income bg-income/10 text-income" : "border-border"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
       </Card>
 
       <Card className="space-y-3">

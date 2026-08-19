@@ -7,7 +7,7 @@ from common.models import TimestampedModel, UserOwnedModel
 
 
 class Category(models.Model):
-    """Categorias fixas do sistema — 9 registros, seed via migration de dados.
+    """Categorias fixas do sistema — 13 registros, seed via management command.
 
     Custom fica pra v2 (fora do escopo do MVP).
     """
@@ -20,7 +20,11 @@ class Category(models.Model):
         HEALTH = "health", "Saúde"
         LEISURE = "leisure", "Lazer"
         HOUSING = "housing", "Moradia"
-        INCOME = "income", "Receita"
+        INCOME = "income", "Salário"
+        EXTRA_INCOME = "extra_income", "Renda Extra"
+        CREDIT_CARD = "credit_card", "Cartão de crédito"
+        LOAN = "loan", "Empréstimo"
+        DEBT = "debt", "Dívida"
         OTHER = "other", "Outros"
 
     id = models.SmallAutoField(primary_key=True)

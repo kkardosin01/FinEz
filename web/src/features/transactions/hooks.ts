@@ -38,3 +38,14 @@ export function useCreateManualTransaction() {
     },
   });
 }
+
+export function useImportTransactions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: transactionsApi.importFile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
+    },
+  });
+}
