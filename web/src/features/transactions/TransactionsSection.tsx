@@ -5,9 +5,10 @@ import { CategoryChip } from "@/components/ui/CategoryChip";
 import { StatementRow } from "@/components/ui/StatementRow";
 import type { Transaction } from "@/types";
 import type { TransactionFilters } from "./api";
+import { EditTransactionDialog } from "./EditTransactionDialog";
 import { ImportTransactionsDialog } from "./ImportTransactionsDialog";
 import { ManualTransactionDialog } from "./ManualTransactionDialog";
-import { useCategories, useRecategorize, useTransactions } from "./hooks";
+import { useCategories, useTransactions } from "./hooks";
 
 interface TransactionsSectionProps {
   filters: TransactionFilters;
@@ -24,7 +25,6 @@ export function TransactionsSection({ filters, onFilterChange, title = "Transaç
   const [dialogOpen, setDialogOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
-  const recategorize = useRecategorize();
   const { data, isLoading } = useTransactions(filters);
 
   return (
@@ -80,57 +80,7 @@ export function TransactionsSection({ filters, onFilterChange, title = "Transaç
       <ManualTransactionDialog open={dialogOpen} onOpenChange={setDialogOpen} />
       <ImportTransactionsDialog open={importOpen} onOpenChange={setImportOpen} />
 
-      {editing && (
-        <RecategorizeSheet
-          transaction={editing}
-          onClose={() => setEditing(null)}
-          onSelect={(categoryId) =>
-            recategorize.mutate(
-              { id: editing.id, category: categoryId },
-              { onSuccess: () => setEditing(null) }
-            )
-          }
-        />
-      )}
-    </div>
-  );
-}
-
-function RecategorizeSheet({
-  transaction,
-  onClose,
-  onSelect,
-}: {
-  transaction: Transaction;
-  onClose: () => void;
-  onSelect: (categoryId: number) => void;
-}) {
-  const { data: categories } = useCategories();
-
-  return (
-    <div className="fixed inset-0 z-20 flex items-end bg-black/40" onClick={onClose}>
-      <div
-        className="w-full rounded-t-card bg-card p-4 space-y-3"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="font-heading font-semibold">{transaction.description}</h3>
-        <p className="text-sm text-fg-secondary">escolha a categoria certa</p>
-        <div className="flex flex-wrap gap-2">
-          {categories?.map((cat) => (
-            <CategoryChip
-              key={cat.id}
-              name={cat.name_pt}
-              colorLight={cat.color_light}
-              colorDark={cat.color_dark}
-              active={transaction.category === cat.id}
-              onClick={() => onSelect(cat.id)}
-            />
-          ))}
-        </div>
-        <Button variant="secondary" className="w-full" onClick={onClose}>
-          cancelar
-        </Button>
-      </div>
+      {editing && <EditTransactionDialog transaction={editing} onClose={() => setEditing(null)} />}
     </div>
   );
 }

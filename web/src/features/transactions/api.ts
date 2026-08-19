@@ -29,11 +29,19 @@ export interface ImportResult {
   errors: string[];
 }
 
+export interface TransactionEditPayload {
+  description: string;
+  date: string;
+  category: number;
+  amount_cents: number;
+}
+
 export const transactionsApi = {
   list: (filters: TransactionFilters) =>
     api.get<PaginatedTransactions>(`/transactions?${toQueryString(filters)}`),
-  recategorize: (id: string, category: number) =>
-    api.patch<Transaction>(`/transactions/${id}`, { category }),
+  update: (id: string, payload: TransactionEditPayload) =>
+    api.patch<Transaction>(`/transactions/${id}`, payload),
+  remove: (id: string) => api.delete<void>(`/transactions/${id}`),
   createManual: (payload: { amount_cents: number; description: string; date: string; category: number }) =>
     api.post<Transaction>("/transactions", payload),
   categories: () => api.get<Category[]>("/categories"),

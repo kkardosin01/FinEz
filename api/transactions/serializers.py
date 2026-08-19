@@ -31,12 +31,22 @@ class TransactionSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["category_source", "origin", "created_at"]
 
+    def validate(self, attrs):
+        category = attrs.get("category") or (self.instance.category if self.instance else None)
+        amount_cents = attrs.get("amount_cents")
+        if amount_cents is None and self.instance:
+            amount_cents = self.instance.amount_cents
+        if category is not None and amount_cents is not None:
+            income_slugs = {Category.Slug.INCOME, Category.Slug.EXTRA_INCOME}
+            if category.slug in income_slugs and amount_cents < 0:
+                # Salário e Renda Extra são sempre dinheiro entrando na conta
+                attrs["amount_cents"] = abs(amount_cents)
+        return attrs
+
     def update(self, instance, validated_data):
         new_category = validated_data.get("category")
         if new_category and new_category != instance.category:
             apply_user_correction(self.context["request"].user, instance, new_category)
-            instance.refresh_from_db()
-            return instance
         return super().update(instance, validated_data)
 
 

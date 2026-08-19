@@ -60,7 +60,7 @@ class TransactionListCreateView(generics.ListCreateAPIView):
         return qs.order_by("-date", "-created_at")
 
 
-class TransactionDetailView(generics.RetrieveUpdateAPIView):
+class TransactionDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TransactionSerializer
 
     def get_queryset(self):
