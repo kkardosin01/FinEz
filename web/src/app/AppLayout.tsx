@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { to: "/", label: "Visão geral", icon: "📊" },
+  { to: "/insights", label: "Insights", icon: "💡" },
   { to: "/orcamentos", label: "Orçamentos", icon: "🎯" },
   { to: "/conta", label: "Conta", icon: "⚙️" },
 ];

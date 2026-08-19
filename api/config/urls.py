@@ -10,6 +10,7 @@ urlpatterns = [
     path("api/", include("budgets.urls")),
     path("api/", include("exports.urls")),
     path("api/", include("investments.urls")),
+    path("api/", include("insights.urls")),
     path("api/whatsapp/", include("whatsapp.api_urls")),
     # Webhooks ficam fora de /api: endpoint público, assinatura verificada no corpo.
     path("webhooks/", include("connections.webhook_urls")),

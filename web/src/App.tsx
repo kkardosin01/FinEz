@@ -4,6 +4,7 @@ import { ProtectedRoute } from "@/app/ProtectedRoute";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { RegisterPage } from "@/features/auth/RegisterPage";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { InsightsPage } from "@/features/insights/InsightsPage";
 import { TransactionsPage } from "@/features/transactions/TransactionsPage";
 import { BudgetsPage } from "@/features/budgets/BudgetsPage";
 import { AccountPage } from "@/features/account/AccountPage";
@@ -23,6 +24,7 @@ export function App() {
       >
         <Route path="/" element={<DashboardPage />} />
         <Route path="/transacoes" element={<TransactionsPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
         <Route path="/orcamentos" element={<BudgetsPage />} />
         <Route path="/conta" element={<AccountPage />} />
       </Route>

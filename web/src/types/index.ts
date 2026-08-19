@@ -87,3 +87,36 @@ export interface InvestmentsTopMovers {
   crypto: InvestmentMover[];
   stocks_and_fiis: InvestmentMover[];
 }
+
+export interface InsightsCategoryRow {
+  category_slug: string;
+  category_name: string;
+  total_cents: number;
+  pct_of_total: number;
+  change_pct_vs_prev_month: number | null;
+}
+
+export interface InsightsCategoryChange {
+  category_name: string;
+  change_pct_vs_prev_month: number;
+}
+
+export interface InsightsBiggestTransaction {
+  description: string;
+  amount_cents: number;
+  date: string;
+  category_name: string;
+}
+
+export interface InsightsData {
+  month: string;
+  previous_month: string;
+  total_expense_cents: number;
+  total_expense_change_pct: number | null;
+  daily_avg_expense_cents: number;
+  top_categories: InsightsCategoryRow[];
+  biggest_increase_category: InsightsCategoryChange | null;
+  biggest_decrease_category: InsightsCategoryChange | null;
+  biggest_single_transaction: InsightsBiggestTransaction | null;
+  messages: string[];
+}
