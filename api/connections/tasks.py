@@ -80,6 +80,7 @@ def _map_account_type(provider_type: str | None) -> str:
 
 def _sync_account_transactions(connection: Connection, account: Account):
     from budgets.tasks import check_budget_alerts  # import local: evita ciclo entre apps
+    from subscriptions.tasks import detect_subscriptions
 
     client = PluggyClient()
     page = 1
@@ -110,6 +111,7 @@ def _sync_account_transactions(connection: Connection, account: Account):
             )
             if created:
                 check_budget_alerts.delay(str(connection.user_id))
+                detect_subscriptions.delay(str(connection.user_id))
 
         if page >= result.get("totalPages", 1):
             break
