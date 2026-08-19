@@ -155,6 +155,26 @@ diferentes, então a stack roda com algumas limitações:
   tier sem expiração): copie a connection string `rediss://...` pro
   `REDIS_URL` do Render.
 
+### CI/CD
+
+O front na Vercel já redeploya sozinho a cada push em `main` (integração
+nativa Git da Vercel, roda `npm run build` antes de publicar).
+
+A API no Render **não** usa o auto-deploy nativo (`autoDeploy: false` no
+`render.yaml`) — em vez disso, o job `deploy-render` do
+`.github/workflows/deploy.yml` dispara o deploy via
+[Deploy Hook](https://render.com/docs/deploy-hooks) só depois que
+`test-backend`/`test-frontend` passarem, evitando publicar código quebrado.
+Setup:
+
+1. No Render, `finez-api` → **Settings → Deploy** → copie a URL em
+   **Deploy Hook** (gera automaticamente quando `autoDeploy` é `Off`).
+2. No GitHub, `Settings → Secrets and variables → Actions` → crie o secret
+   `RENDER_DEPLOY_HOOK_URL` com essa URL.
+
+Depois disso, todo push em `main` que passar nos testes aciona o redeploy
+da API automaticamente.
+
 **Limitação conhecida**: o plano free do Render só cobre "Web Services"
 (dormem após ~15min sem tráfego — primeiro acesso depois disso demora uns
 30s pra acordar); "Background Workers" são pagos, então **Celery
@@ -166,10 +186,13 @@ disparam no ar. Pra ver a stack completa funcionando, rode via
 
 ## Deploy em VPS (stack completa)
 
-`.github/workflows/deploy.yml`: em todo push/PR roda lint + testes de
-`api` e `web`; em push pra `main`, se os testes passarem, conecta via SSH na
-VPS (`secrets.VPS_HOST/VPS_USER/VPS_SSH_KEY`), dá `git pull` e recria os
-containers (`docker compose build && up -d`).
+O mesmo `.github/workflows/deploy.yml` também cobre esse cenário: em todo
+push/PR roda lint + testes de `api` e `web`; em push pra `main`, se os
+testes passarem, o job `deploy` conecta via SSH na VPS
+(`secrets.VPS_HOST/VPS_USER/VPS_SSH_KEY`), dá `git pull` e recria os
+containers (`docker compose build && up -d`). Só relevante se você tiver
+uma VPS própria rodando — sem os secrets configurados, esse job falha
+sozinho (não afeta o deploy do Render, que é um job independente).
 
 ## Pendências conhecidas / stubs
 
