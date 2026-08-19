@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "connections",
     "transactions",
     "budgets",
+    "goals",
+    "subscriptions",
+    "engagement",
     "whatsapp",
     "exports",
     "investments",
@@ -154,6 +157,14 @@ CELERY_BEAT_SCHEDULE = {
         "task": "accounts.tasks.check_orphan_records",
         "schedule": crontab(hour=4, minute=0, day_of_week=1),
     },
+    "daily-subscription-charge-reminders": {
+        "task": "subscriptions.tasks.remind_upcoming_charges",
+        "schedule": crontab(hour=9, minute=0),
+    },
+    "monthly-budget-completion-badges": {
+        "task": "budgets.tasks.check_budget_completions",
+        "schedule": crontab(hour=9, minute=0, day_of_month=1),
+    },
 }
 
 # --- Segredos / criptografia --------------------------------------------
@@ -171,8 +182,9 @@ WHATSAPP_ADAPTER_URL = env("WHATSAPP_ADAPTER_URL", default="http://whatsapp:3333
 WHATSAPP_ADAPTER_TOKEN = env("WHATSAPP_ADAPTER_TOKEN", default="")
 WHATSAPP_WEBHOOK_SECRET = env("WHATSAPP_WEBHOOK_SECRET", default="")
 
-LLM_PROVIDER = env("LLM_PROVIDER", default="")  # decidido na implementação (seção 6)
+LLM_PROVIDER = env("LLM_PROVIDER", default="")  # hoje só "anthropic" é suportado
 LLM_API_KEY = env("LLM_API_KEY", default="")
+LLM_MODEL = env("LLM_MODEL", default="claude-haiku-4-5-20251001")
 
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173")
 

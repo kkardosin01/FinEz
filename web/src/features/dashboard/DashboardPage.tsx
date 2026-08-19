@@ -7,6 +7,7 @@ import { useThemeStore } from "@/app/theme-store";
 import { useMonthParam } from "@/hooks/useMonthParam";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { ConnectionsSection } from "@/features/connections/ConnectionsPage";
+import { EngagementSection } from "@/features/engagement/EngagementSection";
 import { InvestmentsSection } from "@/features/investments/InvestmentsSection";
 import type { TransactionFilters } from "@/features/transactions/api";
 import { TransactionsSection } from "@/features/transactions/TransactionsSection";
@@ -77,6 +78,8 @@ export function DashboardPage() {
           }}
         />
       </div>
+
+      <EngagementSection />
 
       <ConnectionsSection />
 

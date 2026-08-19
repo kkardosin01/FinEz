@@ -39,7 +39,7 @@
 
 ```
 finez/
-├── api/                  # Django (accounts, transactions, connections, budgets, whatsapp, exports)
+├── api/                  # Django (accounts, transactions, connections, budgets, goals, subscriptions, engagement, whatsapp, exports, investments, insights)
 ├── web/                  # React (SPA + PWA)
 ├── whatsapp-adapter/     # Node/Baileys — ponte entre WhatsApp e a API
 ├── infra/                # Caddyfile, script de backup
@@ -70,9 +70,10 @@ finez/
    ```sh
    docker compose up --build
    ```
-   No primeiro boot, o container `api` roda `makemigrations` + `migrate` +
-   `seed_categories` automaticamente (ver `api/entrypoint.sh`). Os workers
-   (`worker`/`beat`) esperam essa migração terminar antes de subir.
+   No primeiro boot, o container `api` roda `migrate` + `seed_categories`
+   automaticamente (ver `api/entrypoint.sh`; migrations já vêm commitadas no
+   repo). Os workers (`worker`/`beat`) esperam essa migração terminar antes
+   de subir.
 
 3. Abra:
    - App: http://localhost (via Caddy) ou http://localhost:5173 (`npm run dev`, ponto 4)
@@ -134,24 +135,18 @@ Este é o scaffold completo do MVP descrito na especificação, incluindo bot e
 integração Pluggy — mas alguns pontos dependem de credenciais reais ou
 decisões de produto que ficam pra depois do beta:
 
-- **Fallback LLM do parser do WhatsApp**: a heurística (regex + palavras-chave)
-  cobre lançamento/consulta/correção; o fallback pra LLM quando a heurística
-  falha está com a integração pendente (`LLM_PROVIDER`/`LLM_API_KEY` no
-  `.env` — sem eles, mensagens não reconhecidas caem em "não entendi").
 - **Credenciais Pluggy**: sandbox configurado (`PLUGGY_CLIENT_ID`/`SECRET` no
   `.env`). Sem elas, o botão "conectar banco" mostra uma mensagem de
-  indisponibilidade em vez de quebrar.
+  indisponibilidade em vez de quebrar. Nota: o "Sandbox PF" (dados mockados)
+  só está disponível no app "Demo" interno da própria Pluggy — apps próprios
+  (como o nosso) só têm acesso aos conectores "Open Finance regulado" + MeuPluggy.
 - **Widget do Pluggy Connect**: versão confirmada em uso (`v2.11.0`, igual
   ao alias `latest` do CDN deles) em `web/src/features/connections/useConnectFlow.ts`
   — reconfirme periodicamente, já que a Pluggy descontinua versões antigas sem aviso.
 - **Ícones do PWA** (`web/public/icon-*.png`): placeholders sólidos na cor da
   marca — trocar por artes reais antes do lançamento.
-- **Migrations do Django**: não foram commitadas à mão (evita erro humano em
-  ~10 modelos relacionados); são geradas automaticamente no primeiro boot do
-  container `api`. Em produção, prefira gerá-las localmente com Postgres real
-  e commitá-las no repo, rodando só `migrate` no deploy.
 - **Categorias/paleta de cores** (`api/transactions/management/commands/seed_categories.py`):
-  cores placeholder, pendente validação de design.
+  pendente validação final de design/marca antes do beta.
 
 ## Licença
 

@@ -48,6 +48,60 @@ export interface Budget {
   spent_cents: number;
 }
 
+export interface SavingsGoal {
+  id: string;
+  name: string;
+  icon: string;
+  target_cents: number;
+  saved_cents: number;
+  target_date: string | null;
+  completed_at: string | null;
+  progress_pct: number;
+  created_at: string;
+}
+
+export interface GoalContribution {
+  id: string;
+  amount_cents: number;
+  note: string;
+  created_at: string;
+}
+
+export type SubscriptionStatus = "active" | "canceled";
+
+export interface Subscription {
+  id: string;
+  name: string;
+  category: number | null;
+  category_slug: string | null;
+  category_name: string | null;
+  amount_cents: number;
+  previous_amount_cents: number | null;
+  last_charged_at: string;
+  status: SubscriptionStatus;
+  created_at: string;
+}
+
+export type BadgeSlug = "streak_7" | "streak_30" | "streak_100" | "budget_master" | "goal_achiever";
+
+export interface Badge {
+  id: string;
+  slug: BadgeSlug;
+  label: string;
+  created_at: string;
+}
+
+export interface Streak {
+  current_streak: number;
+  longest_streak: number;
+  last_logged_date: string | null;
+}
+
+export interface EngagementSummary {
+  streak: Streak;
+  badges: Badge[];
+}
+
 export interface Connection {
   id: string;
   provider: string;
@@ -86,6 +140,39 @@ export interface InvestmentMover {
 export interface InvestmentsTopMovers {
   crypto: InvestmentMover[];
   stocks_and_fiis: InvestmentMover[];
+}
+
+export type HoldingKind = "stock" | "fii" | "crypto";
+
+export interface Holding {
+  id: string;
+  kind: HoldingKind;
+  symbol: string;
+  name: string;
+  quantity: string;
+  avg_price_cents: number;
+  created_at: string;
+}
+
+export interface PortfolioHolding {
+  id: string;
+  kind: HoldingKind;
+  symbol: string;
+  name: string;
+  quantity: string;
+  avg_price_cents: number;
+  invested_cents: number;
+  current_price_cents: number | null;
+  current_value_cents: number | null;
+  gain_cents: number | null;
+  gain_pct: number | null;
+}
+
+export interface PortfolioSummary {
+  holdings: PortfolioHolding[];
+  total_invested_cents: number;
+  total_current_cents: number | null;
+  total_gain_cents: number | null;
 }
 
 export interface InsightsCategoryRow {

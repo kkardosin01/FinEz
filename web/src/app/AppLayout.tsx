@@ -6,6 +6,9 @@ const NAV_ITEMS = [
   { to: "/", label: "Visão geral", icon: "📊" },
   { to: "/insights", label: "Insights", icon: "💡" },
   { to: "/orcamentos", label: "Orçamentos", icon: "🎯" },
+  { to: "/metas", label: "Metas", icon: "🐷" },
+  { to: "/assinaturas", label: "Assinaturas", icon: "🔁" },
+  { to: "/investimentos", label: "Investimentos", icon: "📈" },
   { to: "/conta", label: "Conta", icon: "⚙️" },
 ];
 
