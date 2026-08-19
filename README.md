@@ -4,6 +4,12 @@
 **WhatsApp como interface diária** (lançar/consultar gastos por mensagem) e
 **Open Finance opcional** (Pluggy) pra importar extratos automaticamente.
 
+🔗 **Demo ao vivo**: [fin-ez.vercel.app](https://fin-ez.vercel.app) — cadastro
+fechado por convite, peça um código ou veja a seção
+[Setup local](#setup-local-docker-compose--recomendado) pra rodar a stack
+completa. API no plano free do Render pode levar ~30s pra acordar no
+primeiro acesso.
+
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
@@ -124,15 +130,18 @@ que nunca foi restaurado não é backup.
 
 ## Deploy de portfólio (free tier: Vercel + Render + Neon + Upstash)
 
-Alternativa ao deploy em VPS (abaixo), pensada pra manter uma demo pública no
-ar sem custo. Front e API ficam em domínios diferentes, então a stack roda
-com algumas limitações:
+Demo ao vivo: **[fin-ez.vercel.app](https://fin-ez.vercel.app)** (API em
+`finez-api.onrender.com`). Alternativa ao deploy em VPS (abaixo), pensada
+pra manter uma demo pública no ar sem custo. Front e API ficam em domínios
+diferentes, então a stack roda com algumas limitações:
 
 - **Front** (`web/`) → [Vercel](https://vercel.com): importe o repo, root
   directory `web`, framework Vite (auto-detectado). Configure a env var
-  `VITE_API_URL` apontando pra URL pública da API no Render (ex:
-  `https://finez-api.onrender.com`). O `web/vercel.json` já cuida do rewrite
-  de SPA (rotas do React Router não dão 404 em refresh).
+  `VITE_API_URL` apontando pra URL pública da API no Render **com o
+  sufixo `/api`** (ex: `https://finez-api.onrender.com/api` — o client
+  HTTP do front monta as chamadas como `${VITE_API_URL}${path}`, sem esse
+  sufixo todas as requisições voltam 404). O `web/vercel.json` já cuida do
+  rewrite de SPA (rotas do React Router não dão 404 em refresh).
 - **API** (`api/`) → [Render](https://render.com): "New > Blueprint",
   aponte pro repo — o `render.yaml` na raiz já define o serviço Docker.
   Preencha os envVars marcados `sync: false` no dashboard (gerar
