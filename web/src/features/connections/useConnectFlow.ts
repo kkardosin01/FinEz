@@ -5,7 +5,7 @@ import { useCreateConnectToken } from "./hooks";
 // Widget oficial do Pluggy Connect (carregado via CDN só quando necessário).
 // NOTA: confirme a versão/URL atual no painel do Pluggy antes de ir pra produção —
 // aqui assumimos o pacote hospedado deles pra evitar bundlar credenciais no front.
-const PLUGGY_CONNECT_SCRIPT_URL = "https://cdn.pluggy.ai/pluggy-connect/v2.9.0/pluggy-connect.js";
+const PLUGGY_CONNECT_SCRIPT_URL = "https://cdn.pluggy.ai/pluggy-connect/v2.11.0/pluggy-connect.js";
 
 declare global {
   interface Window {

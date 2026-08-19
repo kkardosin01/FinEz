@@ -138,12 +138,12 @@ decisões de produto que ficam pra depois do beta:
   cobre lançamento/consulta/correção; o fallback pra LLM quando a heurística
   falha está com a integração pendente (`LLM_PROVIDER`/`LLM_API_KEY` no
   `.env` — sem eles, mensagens não reconhecidas caem em "não entendi").
-- **Credenciais Pluggy**: sandbox é gratuito, mas exige cadastro em
-  https://dashboard.pluggy.ai. Sem `PLUGGY_CLIENT_ID`/`SECRET`, o botão
-  "conectar banco" mostra uma mensagem de indisponibilidade em vez de quebrar.
-- **Widget do Pluggy Connect**: a URL do script (`web/src/features/connections/ConnectionsPage.tsx`)
-  foi montada a partir do padrão documentado pela Pluggy — confirme a versão
-  atual no painel deles antes de ir pra produção.
+- **Credenciais Pluggy**: sandbox configurado (`PLUGGY_CLIENT_ID`/`SECRET` no
+  `.env`). Sem elas, o botão "conectar banco" mostra uma mensagem de
+  indisponibilidade em vez de quebrar.
+- **Widget do Pluggy Connect**: versão confirmada em uso (`v2.11.0`, igual
+  ao alias `latest` do CDN deles) em `web/src/features/connections/useConnectFlow.ts`
+  — reconfirme periodicamente, já que a Pluggy descontinua versões antigas sem aviso.
 - **Ícones do PWA** (`web/public/icon-*.png`): placeholders sólidos na cor da
   marca — trocar por artes reais antes do lançamento.
 - **Migrations do Django**: não foram commitadas à mão (evita erro humano em
