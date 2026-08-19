@@ -66,16 +66,23 @@ class ManualTransactionCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        from engagement.services import record_activity
+        from engagement.tasks import check_spending_anomaly
+
         user = self.context["request"].user
         manual_account, _ = Account.objects.get_or_create(
             user=user,
             type=Account.Type.MANUAL,
             defaults={"name": "Lançamentos manuais"},
         )
-        return Transaction.objects.create(
+        transaction = Transaction.objects.create(
             user=user,
             account=manual_account,
             origin=Transaction.Origin.WEB,
             category_source=Transaction.CategorySource.USER,
             **validated_data,
         )
+        if transaction.amount_cents < 0:
+            record_activity(user)
+            check_spending_anomaly.delay(str(user.id))
+        return transaction

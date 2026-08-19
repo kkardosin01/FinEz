@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import date, timedelta
 
 from celery import shared_task
 from django.db.models import Sum
@@ -60,6 +60,33 @@ def check_budget_alerts(user_id: str):
 
         if update_fields:
             budget.save(update_fields=update_fields)
+
+
+@shared_task
+def check_budget_completions():
+    """
+    Celery Beat, dia 1 do mês (gamificação — seção 3): premia com a badge
+    "orçamento em dia" quem fechou o mês anterior sem estourar nenhum orçamento.
+    """
+    from accounts.models import User
+    from engagement.models import Badge
+    from engagement.services import award_badge, notify_badge_earned
+
+    from .models import Budget
+
+    today = date.today()
+    last_month_end = date(today.year, today.month, 1) - timedelta(days=1)
+    last_month = date(last_month_end.year, last_month_end.month, 1)
+
+    user_ids = Budget.objects.filter(month=last_month).values_list("user_id", flat=True).distinct()
+    for user_id in user_ids:
+        budgets = Budget.objects.filter(user_id=user_id, month=last_month)
+        if budgets.filter(alerted_100_at__isnull=False).exists():
+            continue
+        user = User.objects.get(id=user_id)
+        badge, created = award_badge(user, Badge.Slug.BUDGET_MASTER)
+        if created:
+            notify_badge_earned(user, badge)
 
 
 def _notify(link, budget, spent_abs_cents: int, threshold: float) -> None:

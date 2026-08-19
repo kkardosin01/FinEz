@@ -12,6 +12,9 @@ from django.utils import timezone
 
 from budgets.models import Budget
 from budgets.tasks import check_budget_alerts
+from engagement.services import record_activity
+from engagement.tasks import check_spending_anomaly
+from subscriptions.tasks import detect_subscriptions
 from transactions.categorization import apply_user_correction, categorize_free_text
 from transactions.models import Account, Category, Transaction
 
@@ -70,16 +73,22 @@ def _handle_transaction(user, parsed, origin_label: str) -> str:
         origin=Transaction.Origin.WHATSAPP,
     )
     check_budget_alerts.delay(str(user.id))
-    return _format_confirmation(transaction)
+    detect_subscriptions.delay(str(user.id))
+    check_spending_anomaly.delay(str(user.id))
+    new_badges = record_activity(user) if transaction.amount_cents < 0 else []
+    return _format_confirmation(transaction, new_badges)
 
 
-def _format_confirmation(transaction: Transaction) -> str:
+def _format_confirmation(transaction: Transaction, new_badges=None) -> str:
     value = abs(transaction.amount_cents) / 100
     category_name = transaction.category.name_pt
-    return (
+    message = (
         f"✓ R$ {value:.2f} · {category_name} · hoje\n"
         "errou a categoria? manda *era <categoria>*"
     )
+    for badge in new_badges or []:
+        message += f"\n🏆 {badge.get_slug_display()}!"
+    return message
 
 
 def _handle_correction(user, parsed) -> str:
