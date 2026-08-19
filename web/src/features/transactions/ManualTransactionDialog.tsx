@@ -1,9 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { useCategories, useCreateManualTransaction } from "./hooks";
+
+// Categorias que representam dinheiro entrando na conta — nunca podem ser um gasto
+const INCOME_ONLY_SLUGS = new Set(["income", "extra_income"]);
 
 const schema = z.object({
   description: z.string().min(1, "descreva o lançamento"),
@@ -21,11 +25,23 @@ export function ManualTransactionDialog({ open, onOpenChange }: { open: boolean;
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { type: "expense", date: new Date().toISOString().slice(0, 10) },
   });
+
+  const selectedCategoryId = watch("category");
+  const selectedCategory = categories?.find((cat) => cat.id === Number(selectedCategoryId));
+  const isIncomeOnlyCategory = selectedCategory ? INCOME_ONLY_SLUGS.has(selectedCategory.slug) : false;
+
+  useEffect(() => {
+    if (isIncomeOnlyCategory) {
+      setValue("type", "income");
+    }
+  }, [isIncomeOnlyCategory, setValue]);
 
   const onSubmit = (data: FormData) => {
     const amountCents = Math.round(data.amount * 100);
@@ -49,8 +65,12 @@ export function ManualTransactionDialog({ open, onOpenChange }: { open: boolean;
     <Dialog open={open} onOpenChange={onOpenChange} title="Novo lançamento">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <div className="flex gap-2">
-          <label className="flex-1 flex items-center gap-2 rounded-lg border border-border px-3 py-2 min-h-[44px]">
-            <input type="radio" value="expense" {...register("type")} defaultChecked />
+          <label
+            className={`flex-1 flex items-center gap-2 rounded-lg border border-border px-3 py-2 min-h-[44px] ${
+              isIncomeOnlyCategory ? "opacity-50" : ""
+            }`}
+          >
+            <input type="radio" value="expense" {...register("type")} defaultChecked disabled={isIncomeOnlyCategory} />
             Gasto
           </label>
           <label className="flex-1 flex items-center gap-2 rounded-lg border border-border px-3 py-2 min-h-[44px]">
@@ -58,6 +78,9 @@ export function ManualTransactionDialog({ open, onOpenChange }: { open: boolean;
             Entrada
           </label>
         </div>
+        {isIncomeOnlyCategory && (
+          <p className="text-xs text-fg-secondary">salário e renda extra são sempre dinheiro entrando na conta</p>
+        )}
 
         <input
           placeholder="descrição (ex.: lanche na padaria)"

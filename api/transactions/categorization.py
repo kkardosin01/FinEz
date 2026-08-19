@@ -66,7 +66,12 @@ def apply_user_correction(user, transaction, new_category: Category):
     """Usuário recategoriza -> vira regra pra próximas transações parecidas."""
     transaction.category = new_category
     transaction.category_source = "user"
-    transaction.save(update_fields=["category", "category_source", "updated_at"])
+    update_fields = ["category", "category_source", "updated_at"]
+    if new_category.slug in {Category.Slug.INCOME, Category.Slug.EXTRA_INCOME} and transaction.amount_cents < 0:
+        # Salário e Renda Extra são sempre dinheiro entrando na conta
+        transaction.amount_cents = abs(transaction.amount_cents)
+        update_fields.append("amount_cents")
+    transaction.save(update_fields=update_fields)
 
     CategorizationRule.objects.update_or_create(
         user=user,

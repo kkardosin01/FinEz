@@ -45,6 +45,16 @@ class ManualTransactionCreateSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ["amount_cents", "description", "date", "category"]
 
+    def validate(self, attrs):
+        category = attrs.get("category")
+        amount_cents = attrs.get("amount_cents")
+        if category is not None and amount_cents is not None:
+            income_slugs = {Category.Slug.INCOME, Category.Slug.EXTRA_INCOME}
+            if category.slug in income_slugs and amount_cents < 0:
+                # Salário e Renda Extra são sempre dinheiro entrando na conta
+                attrs["amount_cents"] = abs(amount_cents)
+        return attrs
+
     def create(self, validated_data):
         user = self.context["request"].user
         manual_account, _ = Account.objects.get_or_create(
