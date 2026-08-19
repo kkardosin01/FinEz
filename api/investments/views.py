@@ -1,12 +1,13 @@
 """Maiores altas do dia (cripto + ações/FIIs) — provedores públicos e gratuitos.
 
-Sem chave de API configurada (fora do escopo do MVP ter um provedor pago):
-CoinGecko pra cripto, brapi.dev pra ações/FIIs (conjunto curado de tickers,
-já que o plano gratuito não expõe "top movers" nem token de acesso amplo).
+CoinGecko pra cripto (sem chave). brapi.dev pra ações/FIIs (conjunto curado
+de tickers, já que o plano gratuito não expõe "top movers") — exige
+BRAPI_TOKEN configurado; sem ele, a lista de ações/FIIs vem vazia.
 Falha de qualquer provedor não derruba a resposta — devolve lista vazia pro
 grupo afetado.
 """
 import httpx
+from django.conf import settings
 from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -60,8 +61,14 @@ def _fetch_stock_top_movers():
     cached = cache.get(STOCKS_CACHE_KEY)
     if cached is not None:
         return cached
+    if not settings.BRAPI_TOKEN:
+        return []
     try:
-        resp = httpx.get(f"https://brapi.dev/api/quote/{','.join(STOCK_TICKERS)}", timeout=5.0)
+        resp = httpx.get(
+            f"https://brapi.dev/api/quote/{','.join(STOCK_TICKERS)}",
+            params={"token": settings.BRAPI_TOKEN},
+            timeout=5.0,
+        )
         resp.raise_for_status()
         data = resp.json()
     except (httpx.HTTPError, ValueError):

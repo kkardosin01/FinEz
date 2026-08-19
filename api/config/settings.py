@@ -164,6 +164,8 @@ PLUGGY_CLIENT_SECRET = env("PLUGGY_CLIENT_SECRET", default="")
 PLUGGY_BASE_URL = env("PLUGGY_BASE_URL", default="https://api.pluggy.ai")
 PLUGGY_WEBHOOK_SECRET = env("PLUGGY_WEBHOOK_SECRET", default="")
 
+BRAPI_TOKEN = env("BRAPI_TOKEN", default="")  # https://brapi.dev/dashboard — plano gratuito
+
 WHATSAPP_ADAPTER_URL = env("WHATSAPP_ADAPTER_URL", default="http://whatsapp:3333")
 WHATSAPP_ADAPTER_TOKEN = env("WHATSAPP_ADAPTER_TOKEN", default="")
 WHATSAPP_WEBHOOK_SECRET = env("WHATSAPP_WEBHOOK_SECRET", default="")
