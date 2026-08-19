@@ -122,7 +122,40 @@ Requer `aws-cli` configurado e as variáveis `AWS_ACCESS_KEY_ID`,
 ambiente do host. **Teste o restore antes do primeiro usuário real** — backup
 que nunca foi restaurado não é backup.
 
-## CI/CD
+## Deploy de portfólio (free tier: Vercel + Render + Neon + Upstash)
+
+Alternativa ao deploy em VPS (abaixo), pensada pra manter uma demo pública no
+ar sem custo. Front e API ficam em domínios diferentes, então a stack roda
+com algumas limitações:
+
+- **Front** (`web/`) → [Vercel](https://vercel.com): importe o repo, root
+  directory `web`, framework Vite (auto-detectado). Configure a env var
+  `VITE_API_URL` apontando pra URL pública da API no Render (ex:
+  `https://finez-api.onrender.com`). O `web/vercel.json` já cuida do rewrite
+  de SPA (rotas do React Router não dão 404 em refresh).
+- **API** (`api/`) → [Render](https://render.com): "New > Blueprint",
+  aponte pro repo — o `render.yaml` na raiz já define o serviço Docker.
+  Preencha os envVars marcados `sync: false` no dashboard (gerar
+  `DJANGO_SECRET_KEY`/`FERNET_KEY` como faria localmente; `ALLOWED_HOSTS`,
+  `CORS_ALLOWED_ORIGINS`, `CSRF_TRUSTED_ORIGINS` e `FRONTEND_URL` apontando
+  pro domínio da Vercel).
+- **Banco** → [Neon](https://neon.tech) (Postgres serverless, free tier sem
+  expiração): crie um projeto, copie a connection string (com
+  `?sslmode=require`) pro `DATABASE_URL` do Render.
+- **Cache/broker** → [Upstash](https://upstash.com) (Redis serverless, free
+  tier sem expiração): copie a connection string `rediss://...` pro
+  `REDIS_URL` do Render.
+
+**Limitação conhecida**: o plano free do Render só cobre "Web Services"
+(dormem após ~15min sem tráfego — primeiro acesso depois disso demora uns
+30s pra acordar); "Background Workers" são pagos, então **Celery
+worker/beat e o bot de WhatsApp não rodam na demo pública**. CRUD e leituras
+funcionam normalmente; só os efeitos assíncronos (badges, alertas de
+orçamento, lembretes de assinatura, resumo semanal via WhatsApp) não
+disparam no ar. Pra ver a stack completa funcionando, rode via
+`docker compose up --build` localmente (seção acima).
+
+## Deploy em VPS (stack completa)
 
 `.github/workflows/deploy.yml`: em todo push/PR roda lint + testes de
 `api` e `web`; em push pra `main`, se os testes passarem, conecta via SSH na

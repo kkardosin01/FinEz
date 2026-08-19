@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: finez-api
+    runtime: docker
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    plan: free
+    healthCheckPath: /admin/login/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: DEBUG
+        value: "false"
+      - key: ALLOWED_HOSTS
+        sync: false # ex: finez-api.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false # ex: https://finez.vercel.app
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false # ex: https://finez.vercel.app
+      - key: FRONTEND_URL
+        sync: false # ex: https://finez.vercel.app
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
+      - key: CSRF_COOKIE_SECURE
+        value: "true"
+      - key: SESSION_COOKIE_SAMESITE
+        value: "None" # front e API em domínios diferentes (Vercel + Render)
+      - key: CSRF_COOKIE_SAMESITE
+        value: "None"
+      - key: DATABASE_URL
+        sync: false # connection string do Neon (postgresql://...?sslmode=require)
+      - key: REDIS_URL
+        sync: false # connection string do Upstash (rediss://...)
+      - key: FERNET_KEY
+        sync: false
+      - key: PLUGGY_CLIENT_ID
+        sync: false
+      - key: PLUGGY_CLIENT_SECRET
+        sync: false
+      - key: BRAPI_TOKEN
+        sync: false
+      - key: LOG_LEVEL
+        value: "INFO"
+
+# Não inclui worker/beat (Celery) nem o adaptador WhatsApp: no plano free do
+# Render, "Background Workers" são pagos. Pra portfólio, o CRUD e as leituras
+# funcionam normalmente; só os efeitos assíncronos (badges, alertas de
+# orçamento, lembretes, resumo semanal via WhatsApp) não disparam no ar —
+# ver README para rodar a stack completa localmente via docker-compose.

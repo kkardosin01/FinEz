@@ -122,10 +122,13 @@ SPECTACULAR_SETTINGS = {
 }
 
 # --- Sessão / CSRF (cookie httpOnly, sem JWT em localStorage) ---------
+# SAMESITE default "Lax" cobre o caso normal (front e API no mesmo domínio,
+# atrás do Caddy). Em deploy split-domain (ex: front na Vercel + API no
+# Render), precisa de "None" (exige SECURE=true, ou seja, HTTPS nos dois).
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = env("SESSION_COOKIE_SAMESITE", default="Lax")
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
-CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = env("CSRF_COOKIE_SAMESITE", default="Lax")
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:5173"])
