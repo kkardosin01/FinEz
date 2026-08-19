@@ -83,3 +83,11 @@ jobs:
             docker compose build
             docker compose up -d
             docker image prune -f
+
+  deploy-render:
+    needs: [test-backend, test-frontend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar deploy no Render (demo de portfólio)
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"

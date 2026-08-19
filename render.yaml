@@ -6,6 +6,7 @@ services:
     dockerContext: ./api
     plan: free
     healthCheckPath: /admin/login/
+    autoDeploy: false # deploy disparado pelo CI (job "deploy-render") só depois dos testes passarem
     envVars:
       - key: DJANGO_SECRET_KEY
         sync: false
